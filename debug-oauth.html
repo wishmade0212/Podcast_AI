@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google OAuth Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .debug-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #666;
+            margin-top: 0;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .code {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .success {
+            background: #4caf50;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #f44336;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #ff9800;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px 10px 0;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        .copy-btn {
+            background: #4caf50;
+        }
+        .copy-btn:hover {
+            background: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Google OAuth Configuration Debugger</h1>
+    
+    <div class="debug-box">
+        <h2>Current Configuration</h2>
+        <div class="info">
+            <strong>Your App's Callback URL:</strong>
+            <div class="code" id="callback-url">Loading...</div>
+        </div>
+        
+        <div class="info">
+            <strong>Server Base URL:</strong>
+            <div class="code" id="base-url">Loading...</div>
+        </div>
+        
+        <div class="info">
+            <strong>Google Client ID:</strong>
+            <div class="code" id="client-id">Loading...</div>
+        </div>
+    </div>
+    
+    <div class="debug-box">
+        <h2>📋 What to Copy to Google Console</h2>
+        
+        <div class="warning">
+            <strong>⚠️ IMPORTANT:</strong> Copy this EXACT URL to Google Cloud Console
+        </div>
+        
+        <div class="info">
+            <strong>Authorized Redirect URI:</strong>
+            <div class="code" id="redirect-uri-copy" style="cursor: pointer;" onclick="copyToClipboard('redirect-uri-copy')">
+                http://localhost:3000/api/auth/google/callback
+            </div>
+            <button class="copy-btn" onclick="copyToClipboard('redirect-uri-copy')">📋 Copy Redirect URI</button>
+        </div>
+        
+        <div class="info">
+            <strong>Authorized JavaScript Origin:</strong>
+            <div class="code" id="origin-copy" style="cursor: pointer;" onclick="copyToClipboard('origin-copy')">
+                http://localhost:3000
+            </div>
+            <button class="copy-btn" onclick="copyToClipboard('origin-copy')">📋 Copy Origin</button>
+        </div>
+    </div>
+    
+    <div class="debug-box">
+        <h2>🔗 Test Google OAuth URL</h2>
+        <p>This is the exact URL your app will redirect to when clicking "Continue with Google":</p>
+        <div class="code" id="google-oauth-url">Loading...</div>
+        <button onclick="testGoogleLogin()">🚀 Test Google Login</button>
+        <button onclick="window.location.href='/login'">← Back to Login</button>
+    </div>
+    
+    <div class="debug-box">
+        <h2>✅ Setup Checklist</h2>
+        <div id="checklist">
+            <p>Checking configuration...</p>
+        </div>
+    </div>
+    
+    <div class="debug-box">
+        <h2>📖 How to Fix in Google Console</h2>
+        <ol>
+            <li>Go to <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console - Credentials</a></li>
+            <li>Find your OAuth 2.0 Client ID and click on it</li>
+            <li>Under "Authorized redirect URIs", click "ADD URI"</li>
+            <li>Paste: <code>http://localhost:3000/api/auth/google/callback</code></li>
+            <li>Under "Authorized JavaScript origins", click "ADD URI"</li>
+            <li>Paste: <code>http://localhost:3000</code></li>
+            <li>Click "SAVE" at the bottom</li>
+            <li>Wait 10-30 seconds for changes to take effect</li>
+            <li>Come back here and click "Test Google Login"</li>
+        </ol>
+    </div>
+
+    <script>
+        // Get configuration from server
+        async function loadConfig() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                const baseUrl = window.location.origin;
+                const callbackUrl = `${baseUrl}/api/auth/google/callback`;
+                const googleOAuthUrl = `${baseUrl}/api/auth/google`;
+                
+                document.getElementById('callback-url').textContent = callbackUrl;
+                document.getElementById('base-url').textContent = baseUrl;
+                document.getElementById('google-oauth-url').textContent = googleOAuthUrl;
+                
+                // Show checklist
+                showChecklist(baseUrl, callbackUrl);
+                
+            } catch (error) {
+                console.error('Error loading config:', error);
+                document.getElementById('callback-url').textContent = 'Error loading configuration';
+            }
+        }
+        
+        function showChecklist(baseUrl, callbackUrl) {
+            const checklist = document.getElementById('checklist');
+            checklist.innerHTML = `
+                <div class="success">✅ Server is running on port 3000</div>
+                <div class="warning">⚠️ Make sure these URLs are in Google Console:</div>
+                <ul>
+                    <li><strong>Redirect URI:</strong> ${callbackUrl}</li>
+                    <li><strong>JavaScript Origin:</strong> ${baseUrl}</li>
+                </ul>
+                <div class="info">
+                    <strong>Common Mistakes to Avoid:</strong>
+                    <ul>
+                        <li>❌ Don't add trailing slash: <code>/callback/</code></li>
+                        <li>❌ Don't use HTTPS for localhost: <code>https://localhost:3000</code></li>
+                        <li>❌ Don't use IP address: <code>http://127.0.0.1:3000</code></li>
+                        <li>✅ Use exactly: <code>http://localhost:3000</code></li>
+                    </ul>
+                </div>
+            `;
+        }
+        
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent.trim();
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = element.innerHTML;
+                element.innerHTML = '<span style="color: #4caf50;">✅ Copied to clipboard!</span>';
+                setTimeout(() => {
+                    element.textContent = text;
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        }
+        
+        function testGoogleLogin() {
+            if (confirm('This will redirect you to Google login. Continue?')) {
+                window.location.href = '/api/auth/google';
+            }
+        }
+        
+        // Load config on page load
+        loadConfig();
+    </script>
+</body>
+</html>

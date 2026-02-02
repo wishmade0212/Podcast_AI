@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podcast Generator - Convert Text to Audio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-podcast"></i>
+                    <span>Podcast Generator</span>
+                </div>
+                <nav class="nav">
+                    <a href="#features" class="nav-link">Features</a>
+                    <a href="#how-it-works" class="nav-link">How It Works</a>
+                    <a href="login.html" class="btn btn-primary">Get Started Free</a>
+                </nav>
+                <button class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Transform Your Documents into Engaging Podcasts</h1>
+                    <p class="hero-subtitle">Upload text documents, generate AI-powered summaries, and convert them into high-quality audio podcasts with our advanced text-to-speech technology.</p>
+                    <div class="hero-actions">
+                        <a href="login.html" class="btn btn-primary btn-large">Get Started</a>
+                        <button class="btn btn-outline btn-large" id="watch-demo">
+                            <i class="fas fa-play-circle"></i> Watch Demo
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="demo-video-placeholder">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h2 class="section-title">Powerful Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <h3 class="feature-title">Easy Document Upload</h3>
+                        <p class="feature-description">Support for PDF, DOCX, and TXT files with drag-and-drop interface and progress tracking.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-compress-alt"></i>
+                        </div>
+                        <h3 class="feature-title">AI-Powered Summarization</h3>
+                        <p class="feature-description">Intelligent text summarization that extracts key points while maintaining context and readability.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-microphone-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Natural Voice Generation</h3>
+                        <p class="feature-description">High-quality text-to-speech with multiple voice options, accents, and customizable settings.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="how-it-works">
+            <div class="container">
+                <h2 class="section-title">How It Works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Upload Your Document</h3>
+                            <p class="step-description">Simply drag and drop your PDF, DOCX, or TXT file to our secure platform.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Generate Summary</h3>
+                            <p class="step-description">Our AI analyzes your document and creates a concise summary of the key points.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Create Podcast</h3>
+                            <p class="step-description">Choose your preferred voice and settings, then generate your downloadable audio podcast.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="free" class="pricing">
+            <div class="container">
+                <h2 class="section-title">Completely FREE Forever!</h2>
+                <p class="text-center mb-2 text-lg text-secondary">
+                    No credit card required. No hidden fees. Start creating podcasts today!
+                </p>
+                <div class="pricing-cards">
+                    <div class="pricing-card featured max-w-600">
+                        <div class="pricing-badge">100% Free</div>
+                        <h3 class="pricing-title">Podcast Generator</h3>
+                        <div class="pricing-price">$0<span> Forever</span></div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Unlimited documents upload</li>
+                            <li><i class="fas fa-check"></i> AI-powered summarization</li>
+                            <li><i class="fas fa-check"></i> High-quality voice options</li>
+                            <li><i class="fas fa-check"></i> Generate unlimited podcasts</li>
+                            <li><i class="fas fa-check"></i> 5M characters per month (Azure Speech)</li>
+                            <li><i class="fas fa-check"></i> 400+ neural voices</li>
+                            <li><i class="fas fa-check"></i> Download & share MP3 files</li>
+                        </ul>
+                        <a href="login.html" class="btn btn-primary btn-lg">
+                            Start Creating Free
+                        </a>
+                        <p class="mt-1 text-success font-semibold">
+                            ✨ No payment information required
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-podcast"></i>
+                        <span>Podcast Generator</span>
+                    </div>
+                    <p class="footer-description">Transform your documents into engaging audio content with our AI-powered platform.</p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Product</h4>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Connect</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link" title="Follow us on Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" title="Like us on Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link" title="Connect on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link" title="Follow us on Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Podcast Generator. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/env.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

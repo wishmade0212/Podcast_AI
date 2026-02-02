@@ -1,0 +1,67 @@
+# Dependencies
+node_modules/
+# Note: package-lock.json is needed for Railway deployment
+# package-lock.json
+
+# Python virtual environments (do not commit local venvs)
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.*
+
+# Environment variable exports / deployment notes (often contain secrets)
+*_ENV_VARS.txt
+*env-vars*.txt
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Credentials
+google-credentials.json
+*.pem
+*.key
+
+# Uploads (files will be stored on Railway's persistent disk)
+uploads/
+!uploads/.gitkeep
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Build files
+dist/
+build/
+.dist/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Documentation (keep deployment guides)
+!*.md
+
+# RVC runtime/cache directories
+rvc/temp/
+rvc/logs/
+rvc/models/hf/

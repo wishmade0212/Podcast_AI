@@ -1,0 +1,5 @@
+# Optional: Coqui TTS for XTTS zero-shot
+# Recommended Python versions: 3.10 or 3.11
+# On Python 3.12, installation may fail due to dependency constraints.
+
+TTS==0.22.0

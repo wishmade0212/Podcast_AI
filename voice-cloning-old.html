@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Cloning - Podcast Generator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .voice-cloning-main {
+            margin-left: 280px;
+            padding: 20px;
+            min-height: 100vh;
+            background: var(--bg-secondary, #f5f7fa);
+        }
+
+        .page-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .breadcrumb {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #667eea;
+        }
+
+        .upload-zone {
+            border: 3px dashed #4CAF50;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8fdf9;
+        }
+
+        .upload-zone:hover {
+            background: #e8f5e9;
+            border-color: #45a049;
+        }
+
+        .upload-zone.dragover {
+            background: #c8e6c9;
+            border-color: #2e7d32;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-list {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .file-item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .file-size {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .remove-file {
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .voices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .voice-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .voice-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .voice-card.custom {
+            border-color: #4CAF50;
+            background: linear-gradient(135deg, #f8fdf9 0%, #e8f5e9 100%);
+        }
+
+        .voice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .voice-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .voice-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .voice-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .voice-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-use {
+            background: #667eea;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-small:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .generate-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .generate-section {
+                grid-template-columns: 1fr;
+            }
+
+            .voices-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h1>🎙️ Voice Cloning Studio</h1>
+        </div>
+        <div class="nav-links">
+            <a href="dashboard.html">← Back to Dashboard</a>
+            <a href="#" onclick="handleLogout()">Logout</a>
+        </div>
+    </nav>
+
+    <div class="voice-cloning-container">
+        <!-- Alerts -->
+        <div id="alertContainer"></div>
+
+        <!-- Clone New Voice Section -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span>🎤</span> Clone a New Voice
+            </h2>
+            
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('audioFiles').click()">
+                <div class="upload-icon">📁</div>
+                <h3>Drop audio files here or click to browse</h3>
+                <p>Upload 1-25 audio samples (MP3, WAV, M4A, OGG, FLAC)</p>
+                <p style="color: #666; font-size: 14px; margin-top: 10px;">Max 10MB per file • Best quality with 3+ samples</p>
+            </div>
+
+            <input 
+                type="file" 
+                id="audioFiles" 
+                class="file-input" 
+                accept=".mp3,.wav,.m4a,.ogg,.flac,audio/*"
+                multiple
+            >
+
+            <div id="fileList" class="file-list" style="display: none;"></div>
+
+            <div class="form-group">
+                <label class="form-label">Voice Name *</label>
+                <input 
+                    type="text" 
+                    id="voiceName" 
+                    class="form-input" 
+                    placeholder="e.g., John's Voice, Sarah's Professional Tone"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Description (Optional)</label>
+                <textarea 
+                    id="voiceDescription" 
+                    class="form-input form-textarea" 
+                    placeholder="Add details about this voice..."
+                ></textarea>
+            </div>
+
+            <button id="cloneBtn" class="btn-primary" onclick="cloneVoice()">
+                🚀 Clone Voice
+            </button>
+        </div>
+
+        <!-- My Voices Section -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span>🎵</span> My Voices
+                <button class="btn-small" onclick="loadVoices()" style="margin-left: auto;">🔄 Refresh</button>
+            </h2>
+            <div id="voicesGrid" class="voices-grid">
+                <div class="empty-state">
+                    <div class="empty-state-icon">⏳</div>
+                    <p>Loading voices...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generate Speech Section -->
+        <div class="section-card">
+            <h2 class="section-title">
+                <span>💬</span> Generate Speech
+            </h2>
+
+            <div class="form-group">
+                <label class="form-label">Select Voice *</label>
+                <select id="selectedVoice" class="form-input">
+                    <option value="">Loading voices...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Text to Speak *</label>
+                <textarea 
+                    id="textToSpeak" 
+                    class="form-input form-textarea" 
+                    placeholder="Enter the text you want to convert to speech..."
+                    style="min-height: 150px;"
+                ></textarea>
+            </div>
+
+            <button id="generateBtn" class="btn-primary" onclick="generateSpeech()">
+                🔊 Generate Speech
+            </button>
+
+            <div id="audioResult" style="display: none; margin-top: 20px;">
+                <h4>Generated Audio:</h4>
+                <audio id="audioPlayer" class="audio-player" controls></audio>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/env.js"></script>
+    <script src="js/utils/api.js"></script>
+    <script>
+        let selectedFiles = [];
+        let allVoices = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadVoices();
+            setupDragAndDrop();
+            setupFileInput();
+        });
+
+        async function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+        }
+
+        function setupDragAndDrop() {
+            const uploadZone = document.getElementById('uploadZone');
+
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('dragover');
+            });
+
+            uploadZone.addEventListener('dragleave', () => {
+                uploadZone.classList.remove('dragover');
+            });
+
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files);
+                handleFiles(files);
+            });
+        }
+
+        function setupFileInput() {
+            document.getElementById('audioFiles').addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                handleFiles(files);
+            });
+        }
+
+        function handleFiles(files) {
+            const validFiles = files.filter(file => {
+                const validTypes = ['audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/ogg', 'audio/flac', 'audio/x-m4a'];
+                const validExtensions = ['.mp3', '.wav', '.m4a', '.ogg', '.flac'];
+                const hasValidType = validTypes.includes(file.type) || validExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+                const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB
+
+                if (!hasValidType) {
+                    showAlert(`"${file.name}" is not a valid audio file`, 'error');
+                    return false;
+                }
+                if (!isValidSize) {
+                    showAlert(`"${file.name}" exceeds 10MB limit`, 'error');
+                    return false;
+                }
+                return true;
+            });
+
+            selectedFiles = [...selectedFiles, ...validFiles];
+
+            if (selectedFiles.length > 25) {
+                showAlert('Maximum 25 files allowed. Extra files removed.', 'error');
+                selectedFiles = selectedFiles.slice(0, 25);
+            }
+
+            renderFileList();
+        }
+
+        function renderFileList() {
+            const fileList = document.getElementById('fileList');
+            
+            if (selectedFiles.length === 0) {
+                fileList.style.display = 'none';
+                return;
+            }
+
+            fileList.style.display = 'block';
+            fileList.innerHTML = selectedFiles.map((file, index) => `
+                <div class="file-item">
+                    <div class="file-item-info">
+                        <span>🎵</span>
+                        <span>${file.name}</span>
+                        <span class="file-size">(${formatFileSize(file.size)})</span>
+                    </div>
+                    <button class="remove-file" onclick="removeFile(${index})" title="Remove">×</button>
+                </div>
+            `).join('');
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            renderFileList();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        async function cloneVoice() {
+            const voiceName = document.getElementById('voiceName').value.trim();
+            const voiceDescription = document.getElementById('voiceDescription').value.trim();
+            const cloneBtn = document.getElementById('cloneBtn');
+
+            // Validation
+            if (!voiceName) {
+                showAlert('Please enter a voice name', 'error');
+                return;
+            }
+
+            if (selectedFiles.length === 0) {
+                showAlert('Please upload at least one audio file', 'error');
+                return;
+            }
+
+            // Create FormData
+            const formData = new FormData();
+            formData.append('name', voiceName);
+            if (voiceDescription) {
+                formData.append('description', voiceDescription);
+            }
+            selectedFiles.forEach(file => {
+                formData.append('audioFiles', file);
+            });
+
+            // Disable button and show loading
+            cloneBtn.disabled = true;
+            cloneBtn.innerHTML = '<span class="loading"></span> Cloning Voice...';
+
+            try {
+                const response = await fetch(`${window.ENV.getApiUrl()}/api/voice-cloning/clone`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to clone voice');
+                }
+
+                showAlert(`✅ Voice "${voiceName}" cloned successfully!`, 'success');
+                
+                // Reset form
+                document.getElementById('voiceName').value = '';
+                document.getElementById('voiceDescription').value = '';
+                document.getElementById('audioFiles').value = '';
+                selectedFiles = [];
+                renderFileList();
+
+                // Reload voices
+                await loadVoices();
+
+            } catch (error) {
+                showAlert(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                cloneBtn.disabled = false;
+                cloneBtn.innerHTML = '🚀 Clone Voice';
+            }
+        }
+
+        async function loadVoices() {
+            const voicesGrid = document.getElementById('voicesGrid');
+            const selectedVoice = document.getElementById('selectedVoice');
+
+            try {
+                const response = await fetch(`${window.ENV.getApiUrl()}/api/voice-cloning/voices`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to load voices');
+                }
+
+                allVoices = data.voices || [];
+
+                // Render voices grid
+                if (allVoices.length === 0) {
+                    voicesGrid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🎤</div>
+                            <p>No voices yet. Clone your first voice above!</p>
+                        </div>
+                    `;
+                } else {
+                    voicesGrid.innerHTML = allVoices.map(voice => `
+                        <div class="voice-card ${voice.isCustom ? 'custom' : ''}">
+                            <div class="voice-header">
+                                <div class="voice-name">${voice.name}</div>
+                                ${voice.isCustom ? '<span class="voice-badge">CUSTOM</span>' : ''}
+                            </div>
+                            <div class="voice-description">
+                                ${voice.description || 'No description'}
+                            </div>
+                            <div class="voice-actions">
+                                <button class="btn-small btn-use" onclick="selectVoice('${voice.voiceId}')">
+                                    Use This Voice
+                                </button>
+                                ${voice.isCustom ? `
+                                    <button class="btn-small btn-delete" onclick="deleteVoice('${voice.voiceId}', '${voice.name}')">
+                                        🗑️
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                // Update select dropdown
+                selectedVoice.innerHTML = `
+                    <option value="">Select a voice...</option>
+                    ${allVoices.map(voice => `
+                        <option value="${voice.voiceId}">${voice.name}${voice.isCustom ? ' (Custom)' : ''}</option>
+                    `).join('')}
+                `;
+
+            } catch (error) {
+                voicesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <p>Error loading voices: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function selectVoice(voiceId) {
+            document.getElementById('selectedVoice').value = voiceId;
+            document.getElementById('textToSpeak').focus();
+            showAlert('Voice selected! Enter text to generate speech.', 'info');
+        }
+
+        async function deleteVoice(voiceId, voiceName) {
+            if (!confirm(`Are you sure you want to delete "${voiceName}"?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${window.ENV.getApiUrl()}/api/voice-cloning/voices/${voiceId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to delete voice');
+                }
+
+                showAlert(`✅ Voice "${voiceName}" deleted successfully!`, 'success');
+                await loadVoices();
+
+            } catch (error) {
+                showAlert(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function generateSpeech() {
+            const voiceId = document.getElementById('selectedVoice').value;
+            const text = document.getElementById('textToSpeak').value.trim();
+            const generateBtn = document.getElementById('generateBtn');
+            const audioResult = document.getElementById('audioResult');
+            const audioPlayer = document.getElementById('audioPlayer');
+
+            // Validation
+            if (!voiceId) {
+                showAlert('Please select a voice', 'error');
+                return;
+            }
+
+            if (!text) {
+                showAlert('Please enter text to speak', 'error');
+                return;
+            }
+
+            // Disable button and show loading
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<span class="loading"></span> Generating Speech...';
+            audioResult.style.display = 'none';
+
+            try {
+                const response = await fetch(`${window.ENV.getApiUrl()}/api/voice-cloning/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text, voiceId })
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.message || 'Failed to generate speech');
+                }
+
+                // Get audio blob
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                // Show audio player
+                audioPlayer.src = audioUrl;
+                audioResult.style.display = 'block';
+                audioPlayer.play();
+
+                showAlert('✅ Speech generated successfully!', 'success');
+
+            } catch (error) {
+                showAlert(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '🔊 Generate Speech';
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertId = 'alert-' + Date.now();
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.id = alertId;
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = message;
+            
+            alertContainer.appendChild(alertDiv);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                const alert = document.getElementById(alertId);
+                if (alert) {
+                    alert.style.transition = 'opacity 0.3s';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

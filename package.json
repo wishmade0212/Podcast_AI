@@ -1,0 +1,66 @@
+{
+  "name": "podcast-generator",
+  "version": "1.0.0",
+  "description": "A web application for generating podcasts from documents with RVC voice cloning",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "npm install",
+    "dev": "nodemon server.js",
+    "setup:google": "node setup-google-cloud.js",
+    "check:google": "node check-google-config.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate:atlas": "node migrate-to-atlas.js",
+    "migrate:gcs": "node migrate-files-to-gcs.js",
+    "test:atlas": "node test-atlas-connection.js",
+    "test:gcs": "node test-cloud-storage.js",
+    "docker:build": "docker build -t podcast-generator .",
+    "docker:run": "docker run -p 8080:8080 --env-file .env podcast-generator",
+    "deploy:run": "gcloud run deploy podcast-generator --source . --region us-central1 --allow-unauthenticated",
+    "deploy:appengine": "gcloud app deploy app.yaml --quiet",
+    "deploy:build": "gcloud builds submit --config cloudbuild.yaml"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "podcast",
+    "generator",
+    "text-to-speech",
+    "voice-cloning",
+    "rvc",
+    "documents"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/documentai": "^9.2.0",
+    "@google-cloud/storage": "^7.13.0",
+    "@google-cloud/text-to-speech": "^5.4.0",
+    "@google-cloud/vertexai": "^1.7.0",
+    "aws-sdk": "^2.1691.0",
+    "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "connect-mongo": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "elevenlabs": "^0.8.2",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "form-data": "^4.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mammoth": "^1.8.0",
+    "microsoft-cognitiveservices-speech-sdk": "^1.40.0",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.8.0",
+    "multer": "^1.4.5-lts.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

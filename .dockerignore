@@ -1,0 +1,69 @@
+# .dockerignore - Files to exclude from Docker build
+
+# Node modules (will be installed in container)
+node_modules/
+npm-debug.log
+
+# Git
+.git/
+.gitignore
+
+# Environment files (use Secret Manager instead)
+.env
+.env.local
+.env.production
+*.env
+
+# Documentation
+*.md
+!README.md
+
+# Test files
+test/
+*.test.js
+coverage/
+
+# Build artifacts
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Local uploads (use Cloud Storage in production)
+uploads/
+uploads-backup*/
+
+# Google credentials (use Secret Manager)
+google-credentials.json
+# Note: DO NOT exclude package.json or package-lock.json - they're needed for deployment!
+
+# Deployment files
+.gcloudignore
+app.yaml
+cloudbuild.yaml
+
+# Development scripts
+migrate-*.js
+test-*.js
+cleanup-*.js
+check-*.js
+setup-*.js
+debug-*.html

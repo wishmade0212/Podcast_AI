@@ -1,0 +1,27 @@
+[build]
+builder = "NIXPACKS"
+
+[build.nixpacksPlan.phases.setup]
+nixPkgs = ["python311", "nodejs_20", "ffmpeg", "curl"]
+aptPkgs = []
+
+[build.nixpacksPlan.phases.install]
+commands = [
+  "python3 -m venv /opt/venv",
+  "/opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools wheel",
+  "/opt/venv/bin/pip install --no-cache-dir -r requirements.txt"
+]
+
+[build.nixpacksPlan.phases.build]
+commands = ["chmod +x start-railway.sh"]
+
+[deploy]
+startCommand = "bash start-railway.sh"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+healthcheckPath = "/"
+healthcheckTimeout = 300
+
+[[services]]
+name = "web"
+type = "web"

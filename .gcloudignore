@@ -1,0 +1,56 @@
+# .gcloudignore - Files to exclude from App Engine deployment
+
+# This file specifies files that are *not* uploaded to Google Cloud Platform
+# using gcloud. It follows the same syntax as .gitignore, with the addition of
+# "#!include" directives (which insert the entries of the given .gitignore-style
+# file at that point).
+
+#!include .gitignore
+
+# Node modules (will be installed on App Engine)
+node_modules/
+
+# Environment files (use environment variables or Secret Manager)
+.env
+.env.*
+*.env
+
+# Git
+.git/
+.gitattributes
+
+# Documentation
+*.md
+
+# Test files
+test/
+*.test.js
+coverage/
+
+# IDE
+.vscode/
+.idea/
+
+# Deployment files
+.dockerignore
+Dockerfile
+cloudbuild.yaml
+
+# Local uploads
+uploads/
+uploads-backup*/
+
+# Google credentials
+google-credentials.json
+
+# Logs
+*.log
+logs/
+
+# Scripts (not needed in production)
+migrate-*.js
+test-*.js
+cleanup-*.js
+check-*.js
+setup-*.js
+debug-*.html

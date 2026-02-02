@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser TTS Test - Podcast Generator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .voice-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+        }
+        .voice-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: #e8f5e9;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .voice-item:hover {
+            background: #c8e6c9;
+            transform: translateX(5px);
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        .control-group input,
+        .control-group select,
+        .control-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .control-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .status.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #90caf9;
+        }
+        .status.success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border: 1px solid #81c784;
+        }
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎙️ Browser Text-to-Speech Test</h1>
+        <p style="color: #666; margin-bottom: 30px;">
+            Test the built-in browser TTS - completely FREE, no API keys needed!
+        </p>
+
+        <!-- Status -->
+        <div id="status" class="status"></div>
+
+        <!-- Voice List -->
+        <div class="test-section">
+            <h2>📋 Available Voices</h2>
+            <p style="color: #666; margin-bottom: 15px;">
+                Your browser has <strong id="voice-count">0</strong> voices available.
+                Click any voice to test it!
+            </p>
+            <div id="voice-list" class="voice-list">
+                <p>Loading voices...</p>
+            </div>
+        </div>
+
+        <!-- Test Controls -->
+        <div class="test-section">
+            <h2>🎛️ Test Speech Synthesis</h2>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="text-input">Text to Speak:</label>
+                    <textarea id="text-input">Hello! This is a test of browser-based text-to-speech. It's completely free and works without any API keys or billing. Pretty cool, right?</textarea>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="voice-select">Voice:</label>
+                    <select id="voice-select">
+                        <option>Loading voices...</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="rate-input">Speed: <span id="rate-value">1.0x</span></label>
+                    <input type="range" id="rate-input" min="0.5" max="2" step="0.1" value="1.0">
+                </div>
+
+                <div class="control-group">
+                    <label for="pitch-input">Pitch: <span id="pitch-value">1.0</span></label>
+                    <input type="range" id="pitch-input" min="0" max="2" step="0.1" value="1.0">
+                </div>
+
+                <div class="control-group">
+                    <label for="volume-input">Volume: <span id="volume-value">100%</span></label>
+                    <input type="range" id="volume-input" min="0" max="1" step="0.1" value="1.0">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button id="speak-btn" class="btn btn-primary">
+                    <i class="fas fa-play"></i> Speak
+                </button>
+                <button id="pause-btn" class="btn btn-outline" disabled>
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button id="resume-btn" class="btn btn-outline" disabled>
+                    <i class="fas fa-play"></i> Resume
+                </button>
+                <button id="stop-btn" class="btn btn-danger" disabled>
+                    <i class="fas fa-stop"></i> Stop
+                </button>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="test-section">
+            <h2>ℹ️ Browser TTS Information</h2>
+            <ul style="line-height: 1.8; color: #555;">
+                <li><strong>✅ FREE:</strong> No API costs, no billing required</li>
+                <li><strong>✅ Offline:</strong> Works without internet (after page loads)</li>
+                <li><strong>✅ Quality:</strong> Natural-sounding voices (depends on OS/browser)</li>
+                <li><strong>✅ Control:</strong> Adjustable speed, pitch, and volume</li>
+                <li><strong>⚠️ Limitation:</strong> Can't save to file (live speech only)</li>
+                <li><strong>🌐 Support:</strong> Chrome (Excellent), Edge (Excellent), Safari (Good), Firefox (Basic)</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="dashboard.html" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="index.html" class="btn btn-outline">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </div>
+    </div>
+
+    <script src="js/browserTTS.js"></script>
+    <script>
+        // Wait for browserTTS to initialize
+        setTimeout(() => {
+            if (!window.browserTTS || !window.browserTTS.isInitialized) {
+                showStatus('Browser TTS not supported in your browser', 'error');
+                return;
+            }
+
+            loadVoices();
+            setupControls();
+        }, 500);
+
+        function showStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            
+            if (type === 'success' || type === 'info') {
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function loadVoices() {
+            const voices = browserTTS.getVoices();
+            const voiceList = document.getElementById('voice-list');
+            const voiceSelect = document.getElementById('voice-select');
+            const voiceCount = document.getElementById('voice-count');
+
+            voiceCount.textContent = voices.length;
+
+            // Update voice list
+            voiceList.innerHTML = voices.map(voice => `
+                <div class="voice-item" onclick="testVoice('${voice.id}', '${voice.language}')">
+                    <strong>${voice.name}</strong><br>
+                    <small style="color: #666;">${voice.language}</small>
+                    ${voice.default ? ' <span style="background: #4caf50; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">DEFAULT</span>' : ''}
+                </div>
+            `).join('');
+
+            // Update voice select
+            voiceSelect.innerHTML = voices.map(voice => `
+                <option value="${voice.id}">${voice.name} (${voice.language})</option>
+            `).join('');
+        }
+
+        function testVoice(voiceName, language) {
+            const text = `Hello! This is ${voiceName}. Testing voice in ${language}.`;
+            browserTTS.speak(text, {
+                voice: voiceName,
+                rate: 1.0,
+                pitch: 1.0,
+                volume: 1.0,
+                onStart: () => showStatus(`Speaking with ${voiceName}...`, 'info'),
+                onEnd: () => showStatus(`Finished testing ${voiceName}`, 'success'),
+                onError: (error) => showStatus(`Error: ${error}`, 'error')
+            });
+        }
+
+        function setupControls() {
+            const speakBtn = document.getElementById('speak-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            const resumeBtn = document.getElementById('resume-btn');
+            const stopBtn = document.getElementById('stop-btn');
+            const textInput = document.getElementById('text-input');
+            const voiceSelect = document.getElementById('voice-select');
+            const rateInput = document.getElementById('rate-input');
+            const pitchInput = document.getElementById('pitch-input');
+            const volumeInput = document.getElementById('volume-input');
+            const rateValue = document.getElementById('rate-value');
+            const pitchValue = document.getElementById('pitch-value');
+            const volumeValue = document.getElementById('volume-value');
+
+            // Update value displays
+            rateInput.addEventListener('input', () => {
+                rateValue.textContent = rateInput.value + 'x';
+            });
+
+            pitchInput.addEventListener('input', () => {
+                pitchValue.textContent = pitchInput.value;
+            });
+
+            volumeInput.addEventListener('input', () => {
+                volumeValue.textContent = Math.round(volumeInput.value * 100) + '%';
+            });
+
+            // Speak button
+            speakBtn.addEventListener('click', () => {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    showStatus('Please enter some text to speak', 'error');
+                    return;
+                }
+
+                browserTTS.speak(text, {
+                    voice: voiceSelect.value,
+                    rate: parseFloat(rateInput.value),
+                    pitch: parseFloat(pitchInput.value),
+                    volume: parseFloat(volumeInput.value),
+                    onStart: () => {
+                        showStatus('Speaking...', 'info');
+                        speakBtn.disabled = true;
+                        pauseBtn.disabled = false;
+                        stopBtn.disabled = false;
+                    },
+                    onEnd: () => {
+                        showStatus('Finished speaking!', 'success');
+                        speakBtn.disabled = false;
+                        pauseBtn.disabled = true;
+                        resumeBtn.disabled = true;
+                        stopBtn.disabled = true;
+                    },
+                    onError: (error) => {
+                        showStatus(`Error: ${error}`, 'error');
+                        speakBtn.disabled = false;
+                        pauseBtn.disabled = true;
+                        resumeBtn.disabled = true;
+                        stopBtn.disabled = true;
+                    }
+                });
+            });
+
+            // Pause button
+            pauseBtn.addEventListener('click', () => {
+                browserTTS.pause();
+                pauseBtn.disabled = true;
+                resumeBtn.disabled = false;
+                showStatus('Paused', 'info');
+            });
+
+            // Resume button
+            resumeBtn.addEventListener('click', () => {
+                browserTTS.resume();
+                pauseBtn.disabled = false;
+                resumeBtn.disabled = true;
+                showStatus('Resumed', 'info');
+            });
+
+            // Stop button
+            stopBtn.addEventListener('click', () => {
+                browserTTS.stop();
+                speakBtn.disabled = false;
+                pauseBtn.disabled = true;
+                resumeBtn.disabled = true;
+                stopBtn.disabled = true;
+                showStatus('Stopped', 'info');
+            });
+        }
+    </script>
+</body>
+</html>

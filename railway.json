@@ -1,0 +1,25 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "nixpacksPlan": {
+      "phases": {
+        "install": {
+          "cmds": [
+            "python --version || true",
+            "pip --version || true",
+            "pip install --upgrade pip",
+            "pip install -r requirements-huggingface.txt || true",
+            "pip install -r requirements-xtts.txt || true",
+            "npm install"
+          ]
+        }
+      }
+    }
+  },
+  "deploy": {
+    "startCommand": "python3 rvc_service_hf.py & node server.js",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
