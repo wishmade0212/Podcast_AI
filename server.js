@@ -42,6 +42,12 @@ const { initializeVertexAI } = require('./services/vertexAI');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust reverse proxy headers (required on platforms like Render/Railway)
+// so secure cookies and redirects behave correctly behind HTTPS termination.
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // Middleware
 app.use(cors());
 app.use(express.json());
